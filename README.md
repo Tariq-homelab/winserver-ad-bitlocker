@@ -1,23 +1,24 @@
-# Windows Server AD & BitLocker Lab
+# Windows Server 2022: AD & BitLocker Lab
 
-This project demonstrates a complete Windows Server 2022 lab environment configured for enterprise use. The focus is on deploying Active Directory Domain Services (AD DS) and implementing BitLocker full disk encryption using TPM 2.0.
+This lab simulates an enterprise Windows Server 2022 environment focused on identity, access, and data protection. It includes the deployment of Active Directory Domain Services (AD DS), Group Policy configuration, and BitLocker full disk encryption using TPM 2.0.
 
-Each part of the lab is broken into GitHub branches to show progress and isolate functional milestones.
+Each part of the lab is broken into GitHub branches to isolate functionality and show progression over time.
 
 ---
 
 ## Part 1: VM Setup and TPM Verification
 
-Note: The base Windows Server 2022 VM installation was completed in another project. For full installation and VM configuration steps, see:  
-[homelab-vms-containers](https://github.com/Tariq-homelab/homelab-vms-containers)
+Note: The base Windows Server 2022 VM installation was completed in a separate project.  
+For installation and VM configuration steps, see:  
+[homelab-vms-containers](https://github.com/Tariq-homelab/vms-containers)
 
 ### What Was Done
 
-- Accessed the virtual machine through Proxmox Console (noVNC)
-- Verified UEFI boot mode and Secure Boot status via System Information
-- Confirmed presence and readiness of TPM 2.0 using PowerShell
-- Collected a system information report using `Get-ComputerInfo`
-- Captured screenshots for documentation
+- Accessed the virtual machine via Proxmox Console (noVNC)
+- Verified UEFI boot mode and Secure Boot status using System Information
+- Confirmed TPM 2.0 presence via PowerShell
+- Collected system information using `Get-ComputerInfo`
+- Captured supporting screenshots for documentation
 
 ### Commands Used
 
@@ -38,13 +39,7 @@ Get-ComputerInfo > C:\Users\Public\system-info.txt
 ## Next Step
 
 Part 2: Active Directory Domain Services (AD DS) Setup
-- Promote server to Domain Controller
+- Install AD DS role
+- Promote to Domain Controller
 - Configure root domain and DNS
-- Establish basic OU structure
-
-## Lab Status
-
-Part 1: ✅ Complete
-
-
-<!-- Part 1 branch confirmed -->
+- Create initial OU structure
