@@ -8,9 +8,9 @@ Each part of the lab is broken into GitHub branches to isolate functionality and
 
 ## Part 1: VM Setup and TPM Verification
 
-Note: The base Windows Server 2022 VM installation was completed in a separate project.  
-For installation and VM configuration steps, see:  
-[homelab-vms-containers](https://github.com/Tariq-homelab/vms-containers)
+> **Note:** The base Windows Server 2022 VM installation was completed in a separate project.  
+> For installation and VM configuration steps, see:  
+> [vms-containers](https://github.com/Tariq-homelab/vms-containers)
 
 ### What Was Done
 
@@ -29,16 +29,17 @@ Get-ComputerInfo > C:\Users\Public\system-info.txt
 
 ### Screenshots
 
-| Description                        | File                                           |
-|-----------------------------------|------------------------------------------------|
-| System Information (UEFI Boot)    | images/01-System-Information-UEFI-TPM.png      |
-| TPM Check and SystemInfo Export   | images/02-TPM-PowerShell-and-SystemInfo.png    |
+| Description                        | File                                               |
+|-----------------------------------|----------------------------------------------------|
+| System Information (UEFI Boot)    | ![System Info](images/01-System-Information-UEFI-TPM.png) |
+| TPM Check and SystemInfo Export   | ![TPM and Info](images/02-TPM-PowerShell-and-SystemInfo.png) |
 
 ---
 
 ## Next Step
 
-Part 2: Active Directory Domain Services (AD DS) Setup
+### Part 2: Active Directory Domain Services (AD DS) Setup
+
 - Install AD DS role
 - Promote to Domain Controller
 - Configure root domain and DNS
