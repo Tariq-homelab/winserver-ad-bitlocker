@@ -1,3 +1,4 @@
+
 # Windows Server 2022: Active Directory and BitLocker Lab
 
 This repository documents a comprehensive Windows Server 2022 lab environment focused on enterprise identity, access management, and data protection. The project demonstrates practical experience in deploying Active Directory Domain Services (AD DS), enforcing Group Policies, and implementing BitLocker full-disk encryption using TPM 2.0.
@@ -86,5 +87,7 @@ To view the work done in a specific part:
 
 ## Author
 
-This project is part of a self-directed homelab series designed to demonstrate job-ready IT infrastructure skills.  
+This project is part of a self-directed homelab series designed to demonstrate job-ready IT infrastructure skills. 
 All configurations were performed and tested on real virtual machines in a Proxmox environment.
+=======
+
