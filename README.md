@@ -42,4 +42,9 @@ Part 2: Active Directory Domain Services (AD DS) Setup
 - Configure root domain and DNS
 - Establish basic OU structure
 
+## Lab Status
+
+Part 1: ✅ Complete
+
+
 <!-- Part 1 branch confirmed -->
