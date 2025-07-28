@@ -1,104 +1,99 @@
+# Part 2 – Active Directory Domain Services Setup
 
-
-# Windows Server 2022: Active Directory and BitLocker Lab
-
-This repository documents a comprehensive Windows Server 2022 lab environment focused on enterprise identity, access management, and data protection. The project demonstrates practical experience in deploying Active Directory Domain Services (AD DS), enforcing Group Policies, and implementing BitLocker full-disk encryption using TPM 2.0.
-
-Each functional stage of the lab is isolated in a dedicated Git branch to clearly demonstrate progression and allow focused exploration of each component.
+This phase documents the installation and promotion of a Windows Server 2022 machine (`DC1`) to a Domain Controller for the `homelab.local` domain. This includes static IP assignment, server renaming, AD DS role installation, DNS configuration, and domain verification.
 
 ---
 
-## Objectives
+## Static IP Configuration
 
-- Deploy and configure a secure Windows Server 2022 domain environment
-- Install and promote Active Directory Domain Services (AD DS)
-- Configure DNS and domain controller settings
-- Create and manage Organizational Units (OUs), users, and security groups
-- Apply and test Group Policy Objects (GPOs)
-- Implement BitLocker encryption and manage TPM-based protection
-- Join Windows 10/11 clients to the domain
-- Demonstrate PowerShell scripting for administrative tasks
+A static IP address was configured to ensure consistent network identity and domain functionality.
+
+<img src="images/01-Static-IP-Config.png" width="700"/>
 
 ---
 
-## Branch Structure
+## Internet Access Verification
 
-| Branch Name              | Purpose                                                                 |
-|--------------------------|-------------------------------------------------------------------------|
-| [part-1-vm-setup](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1-vm-setup) | Validate UEFI, Secure Boot, and TPM 2.0 settings on Windows Server 2022 |
-| part-2-adds-install      | Install and configure AD DS, DNS, and promote to domain controller      |
-| part-3-ous-users-gpos    | Create OUs, users, groups, and apply Group Policy Objects (GPOs)         |
-| part-4-client-join       | Deploy client systems and join them to the Active Directory domain       |
-| part-5-bitlocker         | Configure BitLocker encryption via GPO and verify TPM-based enforcement |
-| main                     | Overview and entry point (this document)                                |
+Ping was tested after assigning the static IP to ensure proper gateway and DNS settings.
 
-Each branch contains its own README and image assets for documentation and clarity.
+<img src="images/02-Internet-Access-Confirmed.png" width="700"/>
 
 ---
 
-## Tools and Technologies
+## Renaming the Server
 
-- Proxmox Virtual Environment
-- Windows Server 2022 Datacenter Evaluation
-- Windows 10 and 11 client virtual machines
-- PowerShell
-- Group Policy Management Console (GPMC)
-- BitLocker with TPM 2.0
+The default server name was changed to `DC1` to reflect its role as the first domain controller.
+
+<img src="images/03-Rename-Server.png" width="700"/>
 
 ---
 
-## Documentation Structure
+## Disable Ctrl+Alt+Del Requirement
 
-Each branch includes the following elements:
+To streamline VM login during lab work, the Ctrl+Alt+Del prompt was disabled via local security policy.
 
-- Summary of key tasks
-- Commands executed (especially PowerShell)
-- Visual verification through screenshots
-- Optional scripting or automation techniques
+<img src="images/04-Disable-CtrlAltDel.png" width="700"/>
 
 ---
 
-## Security and Infrastructure Concepts
+## Installing AD DS Role
 
-- Centralized identity and access management via AD DS
-- Role-based access control (RBAC) using groups and OUs
-- Domain-based security policy enforcement via GPOs
-- TPM-integrated full-disk encryption with BitLocker
-- Administrative task automation and system interrogation via PowerShell
+The Active Directory Domain Services role was installed using Server Manager.
+
+<img src="images/05-Install-ADDS-Role.png" width="700"/>
 
 ---
 
-## Repository Usage
+## Domain Promotion
 
-To view the work done in a specific part:
+The server was promoted to a Domain Controller for the new forest `homelab.local`.
 
-1. Navigate to the Code tab.
-2. Select the desired branch from the dropdown menu (for example, `part-2-adds-install`).
-3. Open the README file to review the documentation and screenshots for that part.
+<img src="images/06-Domain-Promotion-Review.png" width="700"/>
 
 ---
 
-## Related Projects
+## Post-Promotion Verification
 
-- [vms-containers](https://github.com/Tariq-homelab/vms-containers): VM and container provisioning in Proxmox
-- [project-nas](https://github.com/Tariq-homelab/project-nas): TrueNAS SCALE storage implementation with SMB and NFS
-- [project-vpn](https://github.com/Tariq-homelab/project-vpn): Remote VPN access using Tailscale
+### Server Roles Confirmed
+
+AD DS and DNS roles appeared successfully in Server Manager.
+
+<img src="images/07-Server-Roles-Confirmed.png" width="700"/>
+
+### Active Directory Console
+
+The `homelab.local` domain appeared in ADUC, confirming domain services are active.
+
+<img src="images/08-ADUC-Domain-View.png" width="700"/>
+
+### DNS Forward Lookup Zone
+
+The DNS role created a Forward Lookup Zone for `homelab.local`, with authoritative records for the DC.
+
+<img src="images/09-DNS-Zone-View.png" width="700"/>
+
+---
+
+## Summary
+
+This part completed the foundational setup of the Active Directory environment, including:
+- Static IP networking
+- Domain Controller promotion
+- DNS zone validation
+
+The server is now ready for organizational unit creation, user provisioning, and Group Policy configuration in upcoming phases.
 
 ---
 
 ## Next Steps
 
-In Part 2 of this project, the lab will extend into advanced Active Directory operations and enterprise-grade security implementation. This includes:
+With the domain controller fully promoted and DNS verified, the environment is now ready for further Active Directory structuring and policy enforcement. The next steps include:
 
-- Deploying Group Policy Objects (GPOs) for centralized management  
-- Enforcing BitLocker encryption using TPM and recovery key storage in AD  
-- Joining client machines to the domain and applying organizational policies  
-- Testing domain user restrictions, drive encryption compliance, and recovery workflows  
+- Creating Organizational Units (OUs) to simulate departmental hierarchy
+- Provisioning standard domain user accounts
+- Configuring Security Groups for access control
+- Defining and applying Group Policy Objects (GPOs)
+- Preparing for BitLocker deployment and central key management
 
-> Proceed to: [Part 2 – Group Policy and BitLocker Enforcement](https://github.com/your-username/winserver-ad-bitlocker/tree/part-2)
+Each step will be documented in subsequent parts of this project to demonstrate practical domain administration in a lab environment.
 
-
-## Author
-
-This project is part of a self-directed homelab series designed to demonstrate job-ready IT infrastructure skills.  
-All configurations were performed and tested on real virtual machines in a Proxmox environment.
