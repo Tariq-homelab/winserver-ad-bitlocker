@@ -179,6 +179,18 @@ To view the work done in a specific part:
 
 ---
 
+## Next Steps
+
+In Part 2 of this project, the lab will extend into advanced Active Directory operations and enterprise-grade security implementation. This includes:
+
+- Deploying Group Policy Objects (GPOs) for centralized management  
+- Enforcing BitLocker encryption using TPM and recovery key storage in AD  
+- Joining client machines to the domain and applying organizational policies  
+- Testing domain user restrictions, drive encryption compliance, and recovery workflows  
+
+> Proceed to: [Part 2 – Group Policy and BitLocker Enforcement](https://github.com/your-username/winserver-ad-bitlocker/tree/part-2)
+
+
 ## Author
 
 This project is part of a self-directed homelab series designed to demonstrate job-ready IT infrastructure skills.  
