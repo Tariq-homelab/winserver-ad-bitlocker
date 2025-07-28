@@ -1,104 +1,88 @@
-
-
 # Windows Server 2022: Active Directory and BitLocker Lab
 
-This repository documents a comprehensive Windows Server 2022 lab environment focused on enterprise identity, access management, and data protection. The project demonstrates practical experience in deploying Active Directory Domain Services (AD DS), enforcing Group Policies, and implementing BitLocker full-disk encryption using TPM 2.0.
+This repository documents a modular Windows Server 2022 lab environment focused on enterprise identity, access management, and data protection. It demonstrates practical skills in setting up Active Directory Domain Services (AD DS), configuring DNS, and preparing for Group Policy and BitLocker implementation.
 
-Each functional stage of the lab is isolated in a dedicated Git branch to clearly demonstrate progression and allow focused exploration of each component.
+Each part of the lab is contained in its own Git branch to provide a clean, modular structure and highlight each stage independently.
 
 ---
 
 ## Objectives
 
-- Deploy and configure a secure Windows Server 2022 domain environment
+- Deploy a Windows Server 2022 VM with virtualization features validated
 - Install and promote Active Directory Domain Services (AD DS)
 - Configure DNS and domain controller settings
-- Create and manage Organizational Units (OUs), users, and security groups
-- Apply and test Group Policy Objects (GPOs)
-- Implement BitLocker encryption and manage TPM-based protection
-- Join Windows 10/11 clients to the domain
-- Demonstrate PowerShell scripting for administrative tasks
+- Prepare the foundation for OUs, Group Policies, and BitLocker
+- Demonstrate real-world IT infrastructure skills in a Proxmox-based environment
 
 ---
 
 ## Branch Structure
 
-| Branch Name              | Purpose                                                                 |
-|--------------------------|-------------------------------------------------------------------------|
-| [part-1-vm-setup](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1-vm-setup) | Validate UEFI, Secure Boot, and TPM 2.0 settings on Windows Server 2022 |
-| part-2-adds-install      | Install and configure AD DS, DNS, and promote to domain controller      |
-| part-3-ous-users-gpos    | Create OUs, users, groups, and apply Group Policy Objects (GPOs)         |
-| part-4-client-join       | Deploy client systems and join them to the Active Directory domain       |
-| part-5-bitlocker         | Configure BitLocker encryption via GPO and verify TPM-based enforcement |
-| main                     | Overview and entry point (this document)                                |
+| Branch Name        | Purpose                                                                 |
+|--------------------|-------------------------------------------------------------------------|
+| `part-1-vm-setup`  | Validate UEFI, Secure Boot, and TPM 2.0 inside a Windows Server 2022 VM |
+| `part-2`           | Install AD DS, promote to Domain Controller, and configure DNS          |
+| `main`             | Overview and table of contents (this document)                          |
 
-Each branch contains its own README and image assets for documentation and clarity.
+---
+
+## How to Navigate
+
+To explore each part of the project:
+
+1. Go to the Code tab
+2. Use the branch dropdown to select the part you want to view
+3. Open the `README.md` in that branch to see full documentation and screenshots
+
+---
+
+## Completed Parts
+
+### `part-1-vm-setup`
+Set up the Windows Server 2022 VM with Secure Boot, UEFI, and TPM 2.0 support inside Proxmox. This provides the foundation for BitLocker testing later in the lab.
+
+[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1-vm-setup)
+
+### `part-2`
+Installed Active Directory Domain Services (AD DS), configured a static IP, and promoted the server to a Domain Controller for `homelab.local`. Also verified DNS Forward Lookup Zones and domain functionality.
+
+[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)
 
 ---
 
 ## Tools and Technologies
 
-- Proxmox Virtual Environment
+- Proxmox Virtual Environment (VE)
 - Windows Server 2022 Datacenter Evaluation
-- Windows 10 and 11 client virtual machines
 - PowerShell
 - Group Policy Management Console (GPMC)
-- BitLocker with TPM 2.0
-
----
-
-## Documentation Structure
-
-Each branch includes the following elements:
-
-- Summary of key tasks
-- Commands executed (especially PowerShell)
-- Visual verification through screenshots
-- Optional scripting or automation techniques
-
----
-
-## Security and Infrastructure Concepts
-
-- Centralized identity and access management via AD DS
-- Role-based access control (RBAC) using groups and OUs
-- Domain-based security policy enforcement via GPOs
-- TPM-integrated full-disk encryption with BitLocker
-- Administrative task automation and system interrogation via PowerShell
-
----
-
-## Repository Usage
-
-To view the work done in a specific part:
-
-1. Navigate to the Code tab.
-2. Select the desired branch from the dropdown menu (for example, `part-2-adds-install`).
-3. Open the README file to review the documentation and screenshots for that part.
+- DNS Manager
+- TPM 2.0 emulation (via Proxmox)
 
 ---
 
 ## Related Projects
 
-- [vms-containers](https://github.com/Tariq-homelab/vms-containers): VM and container provisioning in Proxmox
-- [project-nas](https://github.com/Tariq-homelab/project-nas): TrueNAS SCALE storage implementation with SMB and NFS
-- [project-vpn](https://github.com/Tariq-homelab/project-vpn): Remote VPN access using Tailscale
+- [`vms-containers`](https://github.com/Tariq-homelab/vms-containers): Proxmox VM and container provisioning
+- [`project-nas`](https://github.com/Tariq-homelab/project-nas): TrueNAS SCALE deployment for SMB and NFS storage
+- [`project-vpn`](https://github.com/Tariq-homelab/project-vpn): Secure remote access to homelab using Tailscale VPN
 
 ---
 
-## Next Steps
-
-In Part 2 of this project, the lab will extend into advanced Active Directory operations and enterprise-grade security implementation. This includes:
-
-- Deploying Group Policy Objects (GPOs) for centralized management  
-- Enforcing BitLocker encryption using TPM and recovery key storage in AD  
-- Joining client machines to the domain and applying organizational policies  
-- Testing domain user restrictions, drive encryption compliance, and recovery workflows  
-
-> Proceed to: [Part 2 – Group Policy and BitLocker Enforcement](https://github.com/your-username/winserver-ad-bitlocker/tree/part-2)
-
-
 ## Author
 
-This project is part of a self-directed homelab series designed to demonstrate job-ready IT infrastructure skills.  
-All configurations were performed and tested on real virtual machines in a Proxmox environment.
+This project is part of a self-directed homelab series designed to showcase job-ready IT infrastructure skills in identity management, virtualization, and security.  
+All configurations were performed and tested on real VMs in a Proxmox environment.
+
+---
+
+## Coming Soon
+
+Additional branches will cover:
+
+- Organizational Units (OUs), domain users, and security groups
+- Group Policy Objects (GPOs) for access control and configuration
+- BitLocker full-disk encryption with TPM and recovery key storage in AD
+- Domain-joined client testing (Windows 10/11)
+
+Each future part will follow the same documentation structure with screenshots and practical configuration examples.
