@@ -1,88 +1,156 @@
-# Windows Server 2022: Active Directory and BitLocker Lab
+# Part 3: BitLocker Group Policy Enforcement (Windows Server 2022 Lab)
 
-This repository documents a modular Windows Server 2022 lab environment focused on enterprise identity, access management, and data protection. It demonstrates practical skills in setting up Active Directory Domain Services (AD DS), configuring DNS, and preparing for Group Policy and BitLocker implementation.
-
-Each part of the lab is contained in its own Git branch to provide a clean, modular structure and highlight each stage independently.
+This phase demonstrates how to centrally enforce BitLocker encryption in a Windows domain environment using Group Policy. It includes domain controller preparation, GPO creation, TPM support, client policy enforcement, and recovery key verification.
 
 ---
 
-## Objectives
+## Skills Demonstrated
 
-- Deploy a Windows Server 2022 VM with virtualization features validated
-- Install and promote Active Directory Domain Services (AD DS)
-- Configure DNS and domain controller settings
-- Prepare the foundation for OUs, Group Policies, and BitLocker
-- Demonstrate real-world IT infrastructure skills in a Proxmox-based environment
-
----
-
-## Branch Structure
-
-| Branch Name        | Purpose                                                                 |
-|--------------------|-------------------------------------------------------------------------|
-| `part-1-vm-setup`  | Validate UEFI, Secure Boot, and TPM 2.0 inside a Windows Server 2022 VM |
-| `part-2`           | Install AD DS, promote to Domain Controller, and configure DNS          |
-| `main`             | Overview and table of contents (this document)                          |
+- BitLocker drive encryption
+- Group Policy Management (GPO)
+- Domain join and hostname conventions
+- TPM 2.0 emulation in Proxmox
+- AD DS recovery key backup
+- `gpresult` verification
 
 ---
 
-## How to Navigate
+## Lab Overview
 
-To explore each part of the project:
+### 1. Add TPM 2.0 to Windows 10 VM
 
-1. Go to the Code tab
-2. Use the branch dropdown to select the part you want to view
-3. Open the `README.md` in that branch to see full documentation and screenshots
+Enabled TPM 2.0 in the `win10-client` VM via Proxmox hardware settings to support BitLocker.
 
----
-
-## Completed Parts
-
-### `part-1-vm-setup`
-Set up the Windows Server 2022 VM with Secure Boot, UEFI, and TPM 2.0 support inside Proxmox. This provides the foundation for BitLocker testing later in the lab.
-
-[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1-vm-setup)
-
-### `part-2`
-Installed Active Directory Domain Services (AD DS), configured a static IP, and promoted the server to a Domain Controller for `homelab.local`. Also verified DNS Forward Lookup Zones and domain functionality.
-
-[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)
+<img src="images/02-add-tpm2-to-vm.png" width="700">
 
 ---
 
-## Tools and Technologies
+### 2. Create GPO for BitLocker
 
-- Proxmox Virtual Environment (VE)
-- Windows Server 2022 Datacenter Evaluation
-- PowerShell
-- Group Policy Management Console (GPMC)
-- DNS Manager
-- TPM 2.0 emulation (via Proxmox)
+Used Group Policy Management to create a new GPO named `BitLocker Policy`.
+
+<img src="images/01-create-bitlocker-policy-gpo.png" width="700">
 
 ---
 
-## Related Projects
+### 3. Require Authentication at Startup
 
-- [`vms-containers`](https://github.com/Tariq-homelab/vms-containers): Proxmox VM and container provisioning
-- [`project-nas`](https://github.com/Tariq-homelab/project-nas): TrueNAS SCALE deployment for SMB and NFS storage
-- [`project-vpn`](https://github.com/Tariq-homelab/project-vpn): Secure remote access to homelab using Tailscale VPN
+Enabled the policy to require additional authentication at startup. Allowed TPM or TPM+PIN.
 
----
-
-## Author
-
-This project is part of a self-directed homelab series designed to showcase job-ready IT infrastructure skills in identity management, virtualization, and security.  
-All configurations were performed and tested on real VMs in a Proxmox environment.
+<img src="images/03-require-authentication-at-startup.png" width="700">
 
 ---
 
-## Coming Soon
+### 4. Enable Recovery Information in AD
 
-Additional branches will cover:
+Configured the GPO to store BitLocker recovery keys in Active Directory automatically.
 
-- Organizational Units (OUs), domain users, and security groups
-- Group Policy Objects (GPOs) for access control and configuration
-- BitLocker full-disk encryption with TPM and recovery key storage in AD
-- Domain-joined client testing (Windows 10/11)
+<img src="images/04-enable-recovery-info-in-ad.png" width="700">
 
-Each future part will follow the same documentation structure with screenshots and practical configuration examples.
+---
+
+### 5. Link GPO to Domain
+
+Linked the `BitLocker Policy` GPO to the root of the domain.
+
+<img src="images/05-link-bitlocker-gpo-to-domain.png" width="700">
+
+---
+
+### 6. Rename Client Hostname
+
+Renamed the Windows 10 VM to a recognizable name (`win10-client`) and restarted.
+
+<img src="images/06-rename-hostname.png" width="700">
+
+---
+
+### 7. Join Client to Domain
+
+Joined the `win10-client` VM to the Active Directory domain (`homelab.local`) and restarted.
+
+<img src="images/07-domain-join.png" width="700">
+
+---
+
+### 8. Force Group Policy Update
+
+Ran `gpupdate /force` and confirmed successful execution.
+
+<img src="images/08a-gpupdate-success.png" width="700">
+
+---
+
+### 9. Confirm GPO Application with `gpresult`
+
+Verified that the BitLocker policy GPO applied to the machine and user context.
+
+<img src="images/08b-gpresult-bitlocker-policy.png" width="700">
+
+<img src="images/08c-gpresult-user-groups.png" width="700">
+
+---
+
+### 10. Enable BitLocker on C: Drive
+
+Manually initiated BitLocker drive encryption on the client VM.
+
+<img src="images/09-enable-bitlocker.png" width="700">
+
+---
+
+### 11. Allow BitLocker Without Compatible TPM
+
+Verified that Group Policy allowed BitLocker to use TPM without additional password/PIN.
+
+<img src="images/10-allow-bitlocker-without-tpm.png" width="700">
+
+---
+
+### 12. Save Recovery Key to Network Share
+
+Saved the generated BitLocker recovery key to a shared folder on the domain controller (`winserver2022`).
+
+<img src="images/12-save-bitlocker-recovery-key.png" width="700">
+
+---
+
+### 13. Restart Required After Setup
+
+Restarted the VM to complete BitLocker initialization.
+
+<img src="images/13-Restart-Required-After-BitLocker-Setup.png" width="700">
+
+---
+
+### 14. BitLocker Pre-Boot Authentication
+
+BitLocker prompt displayed during boot, requiring password to unlock the drive.
+
+<img src="images/14-BitLocker-Pre-Boot-Authentication-Prompt.png" width="700">
+
+---
+
+### 15. BitLocker Encryption Confirmed
+
+Confirmed encryption status in Control Panel > BitLocker Drive Encryption.
+
+<img src="images/14-BitLocker-Encryption-Confirmed.png" width="700">
+
+---
+
+### 16. Recovery Key Stored on Server
+
+Verified the recovery key was successfully saved to the server-side share.
+
+<img src="images/15-Recovery-Key-Stored-on-Server.png" width="700">
+
+---
+
+## Next Steps
+
+This completes the BitLocker GPO enforcement lab. The next phase will explore:
+
+- Automatic BitLocker deployment via task sequences (MDT or SCCM)
+- Group Policy WMI filtering for BitLocker by model or drive type
+- Auditing BitLocker status across domain machines
