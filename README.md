@@ -1,129 +1,143 @@
 # BitLocker Group Policy Enforcement – Part 3
 
-This section documents the implementation and enforcement of BitLocker encryption policies across the Windows 10 domain-joined client using Group Policy Objects (GPOs), Active Directory Domain Services (AD DS) integration, and TPM-based authentication.
+This section documents the implementation and enforcement of BitLocker encryption policies across a Windows 10 domain-joined client using Group Policy Objects (GPOs), Active Directory Domain Services (AD DS), and TPM-based authentication. Recovery key storage is configured both in Active Directory and on a mapped NAS share.
+
+---
 
 ## Objectives
-- Create and configure a BitLocker policy via GPO.
-- Enforce TPM startup authentication.
-- Store recovery keys in Active Directory.
-- Link policy to domain.
-- Validate GPO delivery and BitLocker enforcement.
+
+- Configure a domain-level GPO for BitLocker.
+- Enforce TPM-only startup authentication.
+- Enable recovery key backup to AD DS.
+- Join the client to the domain and apply GPOs.
+- Launch BitLocker and verify recovery mechanisms.
+
+---
 
 ## Procedure
 
-### 1. Create BitLocker Policy GPO
-- Opened **Group Policy Management Console**.
-- Created a new GPO named `BitLocker Policy`.
+### 1. Create BitLocker Group Policy
 
-![1-create-gpo.png](../images/1-create-gpo.png)
+Opened Group Policy Management on the Domain Controller and created a new GPO named **BitLocker Policy**.
 
----
-
-### 2. Attach TPM Module to VM
-- Enabled **TPM 2.0** in Proxmox for the Windows 10 VM.
-
-![2-enable-tpm-proxmox.png](../images/2-enable-tpm-proxmox.png)
+![1-create-gpo.png](./1-create-gpo.png)
 
 ---
 
-### 3. Require Startup Authentication
-- Edited GPO to enable **"Require additional authentication at startup"**.
-- Configured the policy to allow **TPM only**.
+### 2. Enable TPM for Client VM
 
-![3-require-authentication.png](../images/3-require-authentication.png)
+Enabled TPM 2.0 in Proxmox for the Windows 10 virtual machine to support BitLocker authentication via hardware TPM.
+
+![2-enable-tpm-proxmox.png](./2-enable-tpm-proxmox.png)
+
+---
+
+### 3. Configure Startup Authentication Policy
+
+Edited the GPO to enable **"Require additional authentication at startup"** and allowed **TPM only**.
+
+![3-require-authentication.png](./3-require-authentication.png)
 
 ---
 
 ### 4. Enable AD DS Recovery Key Backup
-- Enabled GPO: **"Save BitLocker recovery information to AD DS for OS drives"**.
 
-![4-save-recovery-keys-to-ad.png](../images/4-save-recovery-keys-to-ad.png)
+Configured the second GPO setting: **"Save BitLocker recovery information to AD DS for OS drives"**, ensuring recovery keys are centrally stored in Active Directory.
+
+![4-save-recovery-keys-to-ad.png](./4-save-recovery-keys-to-ad.png)
 
 ---
 
 ### 5. Link GPO to Domain
-- Linked `BitLocker Policy` GPO to the domain `homelab.local`.
 
-![5-link-gpo.png](../images/5-link-gpo.png)
+Linked the `BitLocker Policy` to the `homelab.local` domain root so that it applies to all relevant computer objects.
+
+![5-link-gpo.png](./5-link-gpo.png)
 
 ---
 
 ### 6. Rename Hostname and Restart
-- Renamed the Windows 10 client to a standardized hostname.
-- Rebooted for domain join prep.
 
-![6-rename-hostname.png](../images/6-rename-hostname.png)
+Renamed the client VM to a standardized hostname for easier identification in Active Directory. Restarted the system to apply the new name.
 
----
-
-### 7. Join Client to Domain
-- Joined the Windows 10 client to `homelab.local` domain.
-
-![7-join-domain.png](../images/7-join-domain.png)
+![6-rename-hostname.png](./6-rename-hostname.png)
 
 ---
 
-### 8. Force GPO Update and Check Results
-- Ran `gpupdate /force` and confirmed GPO via `rsop.msc`.
+### 7. Join the Client to the Domain
 
-![8-gpupdate.png](../images/8-gpupdate.png)  
-![8-gpo-confirm-1.png](../images/8-gpo-confirm-1.png)  
-![8-gpo-confirm-2.png](../images/8-gpo-confirm-2.png)
+Used the system properties wizard to join the Windows 10 VM to the `homelab.local` domain.
+
+![7-join-domain.png](./7-join-domain.png)
+
+---
+
+### 8. Force GPO Update and Run RSOP
+
+After logging in with a domain user account, ran `gpupdate /force` and launched **Resultant Set of Policy (rsop.msc)** to verify that BitLocker settings were successfully applied.
+
+![8-rsop-confirmation.png](./8-rsop-confirmation.png)
 
 ---
 
 ### 9. Launch BitLocker Setup
-- Attempted to enable BitLocker from Control Panel.
-- Encountered TPM error due to initial sync delay.
 
-![9-enable-bitlocker.png](../images/9-enable-bitlocker.png)
+Opened **Control Panel > BitLocker Drive Encryption** to start the encryption process. Encountered a TPM error on first attempt (due to policy sync delay).
 
----
-
-### 10. Retry After Reboot
-- Rebooted the system and launched BitLocker successfully.
-
-![10-bitlocker-success.png](../images/10-bitlocker-success.png)
+![09-enable-bitlocker.png](./09-enable-bitlocker.png)
 
 ---
 
-### 11. Save Recovery Key to Network Share
-- Mapped drive to NAS as `Z:\`.
-- Saved BitLocker recovery key `.txt` file.
+### 10. Reboot and Retry Encryption
 
-![11-save-recovery-key-to-z.png](../images/11-save-recovery-key-to-z.png)
+After reboot, BitLocker launched successfully. The system prompted for recovery key backup.
 
----
-
-### 12. Verify Recovery Key in AD
-- Opened **Active Directory Users and Computers**.
-- Viewed recovery key under computer object properties.
-
-![12-ad-recovery-tab.png](../images/12-ad-recovery-tab.png)
+![10-bitlocker-enabled.png](./10-bitlocker-enabled.png)
 
 ---
 
-### 13. Confirm Encryption Status
-- Viewed encryption status via Control Panel and `manage-bde`.
+### 11. Save Recovery Key to NAS Share
 
-![13-encrypting-status.png](../images/13-encrypting-status.png)
+Selected the mapped `Z:` drive (connected to the NAS SMB share) and saved the `.txt` recovery key file to the network location.
+
+![11-save-to-zdrive.png](./11-save-to-zdrive.png)
+
+---
+
+### 12. Verify Recovery Key in AD DS
+
+On the Domain Controller, opened **Active Directory Users and Computers**, navigated to the computer object, and confirmed the recovery key is stored under the **BitLocker Recovery** tab.
+
+![12-ad-bitlocker-tab.png](./12-ad-bitlocker-tab.png)
+
+---
+
+### 13. Check BitLocker Encryption Status
+
+On the client, opened **BitLocker Drive Encryption** again to confirm encryption was in progress. Also verified status using PowerShell with `manage-bde -status`.
+
+![13-bitlocker-encrypting.png](./13-bitlocker-encrypting.png)
 
 ---
 
 ## Skills Demonstrated
-- Group Policy authoring and linking
-- BitLocker policy configuration
-- TPM-based authentication
-- Active Directory integration
-- Recovery key backup to AD
-- Network drive mapping
-- Domain-joined client configuration
+
+- Group Policy authoring and enforcement
+- TPM integration for secure boot authentication
+- Active Directory object linking and policy application
+- Centralized recovery key management (AD DS + NAS)
+- Domain join and remote encryption configuration
+
+---
 
 ## Next Steps
-Proceed to **Part 4** of the project, focusing on Active Directory administrative tasks:
-- Create organizational units (OUs)
-- Batch-create users
-- Delegate control via groups
-- Automate user provisioning using PowerShell
 
-This will build essential sysadmin skills beyond BitLocker deployment.
+Part 4 will extend Active Directory functionality by simulating real-world user management:
+
+- Create Organizational Units (OUs) for departments
+- Add users manually and in bulk
+- Use PowerShell scripts to automate account creation
+- Delegate access control using security groups
+
+This provides a more complete hands-on sysadmin experience using Windows Server 2022 and AD DS.
+
