@@ -12,7 +12,76 @@ This lab demonstrates how to configure and enforce BitLocker drive encryption us
 - Ensure auditing is enabled for security compliance.
 
 ---
-
+## 1. Launch BitLocker Setup
+BitLocker was launched via the Control Panel on the domain-joined client.
+![](images/01-Launch BitLocker Setup.png)
+## 2. BitLocker Setup Wizard: TPM Detected
+The setup wizard confirmed that a TPM was detected and required no additional PIN or USB.
+![](images/02-BitLocker Wizard with TPM Detected.png)
+## 3. Encryption Choice: Used Space Only
+"Encrypt used disk space only" was selected for faster encryption on new devices.
+![](images/03-Encrypt Used Disk Space Only.png)
+## 4. Encryption Mode: New (XTS-AES)
+Selected "New encryption mode" (XTS-AES) as the target machine is modern and supports it.
+![](images/04-Encryption Mode Selection.png)
+## 5. Run BitLocker System Check
+Enabled the system check option to verify readiness before encryption.
+![](images/05-Run BitLocker System Check.png)
+## 6. Save Recovery Key: Choose Location
+Selected a custom network path as defined by GPO for saving the recovery key.
+![](images/06-Choose Recovery Key Location.png)
+## 7. Network Drive Mapped
+Confirmed that the SMB network share was accessible and mapped successfully.
+![](images/07-Network Drive Mapped for Key Export.png)
+## 8. Save Recovery Key to Network
+BitLocker exported the recovery key to the mapped SMB share.
+![](images/08-Recovery Key Saved to Network.png)
+## 9. Launching BitLocker Triggers GPO
+BitLocker launched with pre-configured options set via Group Policy. Manual options were greyed out.
+![](images/09-Enable BitLocker.png)
+## 10. AD DS Recovery Key Storage Confirmed
+Opened Active Directory Users and Computers (ADUC) to view the recovery key.
+![](images/10-View Recovery Key in ADUC.png)
+## 11. Select Network Share for Recovery Key
+The wizard showed the SMB path defined in GPO during the save step.
+![](images/11-Select Network Share for Recovery Key.png)
+## 12. Confirm Saved Recovery Key File
+The recovery key file was successfully saved on the network share, confirming key export to the SMB
+location.
+![](images/12-Recovery Key File Saved on Network.png)
+## 13. Restart Prompt After Setup
+After applying the BitLocker Group Policy settings, the system prompted for a restart to begin the encryption
+process.
+![](images/13-Restart Required After Bitlocker Setup.png)
+## 14. BitLocker Status: Encryption Started
+Upon reboot, the BitLocker control panel displayed the status "Encryption in progress," confirming that drive
+encryption had begun.
+![](images/14-BitLocker Encryption Confirmed.png)
+## 15. Pre-Boot Authentication Prompt (TPM)
+The system displayed a pre-boot authentication screen confirming that TPM was used for BitLocker
+protection, as configured in the Group Policy.
+![](images/14-BitLocker Pre-Boot Authentication Prompt.png)
+## 16. Recovery Key Stored in Active Directory
+The recovery key was confirmed to be stored in Active Directory. It was accessed through the computer
+objects properties under the "BitLocker Recovery" tab in Active Directory Users and Computers (ADUC).
+![](images/15-Recovery Key Stored on Server.png)
+## 17. Enable Event Logging (Optional)
+BitLocker-related event logging was enabled to assist with auditing and troubleshooting.
+![](images/16-Event Viewer Logging Enabled.png)
+## 18. Confirm BitLocker Event ID
+Verified the Event ID 845 (BitLocker status) and 851 (Volume locked) in the Windows Event Viewer.
+![](images/17-BitLocker Event Viewer Logs.png)
+## 19. Verify GPO Configuration
+Opened Group Policy Management Editor on the server to review the policy settings.
+![](images/18-Group Policy Review on Server.png)
+## 20. Test Another User Login
+Logged in as another domain user on the encrypted machine to confirm policy enforcement.
+![](images/19-Login with Another Domain User.png)
+---
+## Next Steps
+- Extend the lab to cover GPO-enforced BitLocker for removable drives.
+- Implement automatic backup of recovery keys to secure off-site storage.
+- Simulate drive failure scenarios and validate recovery key usage.
 ## Steps
 
 ### 1. Create BitLocker Policy GPO
