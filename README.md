@@ -1,156 +1,128 @@
-# Part 3: BitLocker Group Policy Enforcement (Windows Server 2022 Lab)
+# Part 3: BitLocker GPO Enforcement and Verification
 
-This phase demonstrates how to centrally enforce BitLocker encryption in a Windows domain environment using Group Policy. It includes domain controller preparation, GPO creation, TPM support, client policy enforcement, and recovery key verification.
-
----
-
-## Skills Demonstrated
-
-- BitLocker drive encryption
-- Group Policy Management (GPO)
-- Domain join and hostname conventions
-- TPM 2.0 emulation in Proxmox
-- AD DS recovery key backup
-- `gpresult` verification
+This phase demonstrates enforcing BitLocker encryption on domain-joined clients using Group Policy, with recovery key backup to Active Directory. A Windows 10 Pro VM was used to validate that the BitLocker GPO was applied, encryption initiated, and recovery information stored both on a shared folder and within AD DS.
 
 ---
 
-## Lab Overview
+## Objectives
 
-### 1. Add TPM 2.0 to Windows 10 VM
-
-Enabled TPM 2.0 in the `win10-client` VM via Proxmox hardware settings to support BitLocker.
-
-<img src="images/02-add-tpm2-to-vm.png" width="700">
-
----
-
-### 2. Create GPO for BitLocker
-
-Used Group Policy Management to create a new GPO named `BitLocker Policy`.
-
-<img src="images/01-create-bitlocker-policy-gpo.png" width="700">
+- Create and link a Group Policy to enforce BitLocker
+- Enable recovery key backup to Active Directory
+- Trigger encryption on a domain-joined Windows 10 client
+- Save the recovery key to a network share
+- Confirm encryption status and AD DS recovery key storage
+- Verify policy application using `gpresult` and PowerShell
 
 ---
 
-### 3. Require Authentication at Startup
+## Procedures and Evidence
 
-Enabled the policy to require additional authentication at startup. Allowed TPM or TPM+PIN.
+1. **Create BitLocker Policy GPO**
+   - Created new GPO: `BitLocker Policy`
+   - Screenshot: `01-create-bitlocker-policy-gpo.png`
 
-<img src="images/03-require-authentication-at-startup.png" width="700">
+2. **Attach TPM Module to VM**
+   - Enabled TPM 2.0 on the Windows 10 VM via Proxmox
+   - Screenshot: `02-add-tpm2-to-vm.png`
 
----
+3. **Require Startup Authentication**
+   - Enabled policy to require authentication at startup
+   - Screenshot: `03-require-authentication-at-startup.png`
 
-### 4. Enable Recovery Information in AD
+4. **Enable AD DS Recovery Key Backup**
+   - Configured BitLocker recovery key backup to AD DS
+   - Screenshot: `04-enable-recovery-info-in-ad.png`
 
-Configured the GPO to store BitLocker recovery keys in Active Directory automatically.
+5. **Link GPO to Domain**
+   - Linked the GPO to `homelab.local`
+   - Screenshot: `05-link-bitlocker-gpo-to-domain.png`
 
-<img src="images/04-enable-recovery-info-in-ad.png" width="700">
+6. **Rename Client Hostname**
+   - Renamed the Windows 10 client for clarity in AD
+   - Screenshot: `06-rename-hostname.png`
 
----
+7. **Join Domain**
+   - Joined the Windows 10 VM to the domain
+   - Screenshot: `07-domain-join.png`
 
-### 5. Link GPO to Domain
+8. **Force GPO Update**
+   - Ran `gpupdate /force` to pull the new BitLocker policy
+   - Screenshot: `08a-gpupdate-success.png`
 
-Linked the `BitLocker Policy` GPO to the root of the domain.
+9. **Verify GPO Application**
+   - Used `gpresult /h report.html`
+   - Verified user and computer policies
+   - Screenshots: `08b-gpresult-bitlocker-policy.png`, `08c-gpresult-user-groups.png`
 
-<img src="images/05-link-bitlocker-gpo-to-domain.png" width="700">
+10. **Enable BitLocker**
+    - Launched the BitLocker setup wizard
+    - Screenshot: `09-enable-bitlocker.png`
 
----
+11. **Allow BitLocker Without TPM (if needed)**
+    - Allowed fallback configuration for virtual TPM
+    - Screenshot: `10-allow-bitlocker-without-tpm.png`
 
-### 6. Rename Client Hostname
+12. **Map Network Drive**
+    - Mapped server folder for saving recovery key (Y:)
+    - Screenshot: `11-mapped-network-drive.png`
 
-Renamed the Windows 10 VM to a recognizable name (`win10-client`) and restarted.
+13. **Save Recovery Key**
+    - Saved recovery key to network share
+    - Screenshot: `12-save-bitlocker-recovery-key.png`
 
-<img src="images/06-rename-hostname.png" width="700">
+14. **BitLocker Setup Complete**
+    - Restarted after setup
+    - Screenshot: `13-Restart Required After BitLocker Setup.png`
 
----
+15. **Encryption Confirmation**
+    - Confirmed encryption status via `manage-bde -status`
+    - Screenshot: `14-BitLocker Encryption Confirmed.png`
 
-### 7. Join Client to Domain
+16. **Pre-Boot Authentication Prompt**
+    - Screenshot taken during bootup with BitLocker prompt
+    - Screenshot: `14-BitLocker Pre-Boot Authentication Prompt.png`
 
-Joined the `win10-client` VM to the Active Directory domain (`homelab.local`) and restarted.
+17. **Recovery Key on Server**
+    - Verified recovery key file saved to mapped drive
+    - Screenshot: `15-Recovery Key Stored on Server.png`
 
-<img src="images/07-domain-join.png" width="700">
+18. **Enable BitLocker Event Logging**
+    - Verified event log channels via `wevtutil`
+    - Screenshot: `16-enable-bitlocker-event-logging.png`
 
----
+19. **Verify BitLocker Policy via PowerShell**
+    - Used `Get-BitLockerVolume` and protector ID commands
+    - Screenshot: `17-bitlocker-policy-verification.png`, `18-get-protector-id.png`
 
-### 8. Force Group Policy Update
-
-Ran `gpupdate /force` and confirmed successful execution.
-
-<img src="images/08a-gpupdate-success.png" width="700">
-
----
-
-### 9. Confirm GPO Application with `gpresult`
-
-Verified that the BitLocker policy GPO applied to the machine and user context.
-
-<img src="images/08b-gpresult-bitlocker-policy.png" width="700">
-
-<img src="images/08c-gpresult-user-groups.png" width="700">
-
----
-
-### 10. Enable BitLocker on C: Drive
-
-Manually initiated BitLocker drive encryption on the client VM.
-
-<img src="images/09-enable-bitlocker.png" width="700">
-
----
-
-### 11. Allow BitLocker Without Compatible TPM
-
-Verified that Group Policy allowed BitLocker to use TPM without additional password/PIN.
-
-<img src="images/10-allow-bitlocker-without-tpm.png" width="700">
-
----
-
-### 12. Save Recovery Key to Network Share
-
-Saved the generated BitLocker recovery key to a shared folder on the domain controller (`winserver2022`).
-
-<img src="images/12-save-bitlocker-recovery-key.png" width="700">
-
----
-
-### 13. Restart Required After Setup
-
-Restarted the VM to complete BitLocker initialization.
-
-<img src="images/13-Restart-Required-After-BitLocker-Setup.png" width="700">
+20. **Confirm GPO via HTML Report**
+    - Opened `gpresult.html` to confirm BitLocker GPO applied
+    - Screenshots:
+      - `19-gpresult-summary-success.png`
+      - `20-gpresult-bitlocker-policy-applied.png`
+      - `21-gpresult-component-status-success.png`
 
 ---
 
-### 14. BitLocker Pre-Boot Authentication
+## Technical Highlights
 
-BitLocker prompt displayed during boot, requiring password to unlock the drive.
-
-<img src="images/14-BitLocker-Pre-Boot-Authentication-Prompt.png" width="700">
-
----
-
-### 15. BitLocker Encryption Confirmed
-
-Confirmed encryption status in Control Panel > BitLocker Drive Encryption.
-
-<img src="images/14-BitLocker-Encryption-Confirmed.png" width="700">
+- **Group Policy:** Enforced encryption and automated recovery key storage
+- **AD DS Integration:** Key is stored under the client’s computer object in Active Directory
+- **Network Share:** Key saved to a secure share as backup
+- **Logging:** Event channels and PowerShell used to verify enforcement
+- **GPO Verification:** HTML report (`gpresult`) confirms BitLocker policy application
 
 ---
 
-### 16. Recovery Key Stored on Server
+## Next Steps: Part 4
 
-Verified the recovery key was successfully saved to the server-side share.
+The next section will transition from BitLocker enforcement to Active Directory administration tasks. Part 4 will include:
 
-<img src="images/15-Recovery-Key-Stored-on-Server.png" width="700">
+- Creating Organizational Units (OUs)
+- Defining departments and roles
+- Adding users manually and via PowerShell scripting
+- Applying GPOs to OUs for realistic AD delegation
+- Logging and managing BitLocker recovery keys per user/device
+
+This transition focuses on real-world sysadmin responsibilities.
 
 ---
-
-## Next Steps
-
-This completes the BitLocker GPO enforcement lab. The next phase will explore:
-
-- Automatic BitLocker deployment via task sequences (MDT or SCCM)
-- Group Policy WMI filtering for BitLocker by model or drive type
-- Auditing BitLocker status across domain machines
