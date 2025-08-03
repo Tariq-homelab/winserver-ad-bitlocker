@@ -1,6 +1,6 @@
 # Windows Server 2022: Active Directory and BitLocker Lab
 
-This repository documents a modular Windows Server 2022 lab environment focused on enterprise identity, access management, and data protection. It demonstrates practical skills in setting up Active Directory Domain Services (AD DS), configuring DNS, and preparing for Group Policy and BitLocker implementation.
+This repository documents a modular Windows Server 2022 lab environment focused on enterprise identity, access management, and data protection. It demonstrates practical skills in setting up Active Directory Domain Services (AD DS), configuring DNS, implementing Group Policy, and managing BitLocker encryption using TPM.
 
 Each part of the lab is contained in its own Git branch to provide a clean, modular structure and highlight each stage independently.
 
@@ -11,18 +11,20 @@ Each part of the lab is contained in its own Git branch to provide a clean, modu
 - Deploy a Windows Server 2022 VM with virtualization features validated
 - Install and promote Active Directory Domain Services (AD DS)
 - Configure DNS and domain controller settings
-- Prepare the foundation for OUs, Group Policies, and BitLocker
+- Apply Group Policies for encryption and access management
+- Implement BitLocker full-disk encryption with TPM and AD-integrated recovery keys
 - Demonstrate real-world IT infrastructure skills in a Proxmox-based environment
 
 ---
 
 ## Branch Structure
 
-| Branch Name        | Purpose                                                                 |
-|--------------------|-------------------------------------------------------------------------|
-| `part-1-vm-setup`  | Validate UEFI, Secure Boot, and TPM 2.0 inside a Windows Server 2022 VM |
-| `part-2`           | Install AD DS, promote to Domain Controller, and configure DNS          |
-| `main`             | Overview and table of contents (this document)                          |
+| Branch Name | Purpose |
+|-------------|---------|
+| [`part-1`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1) | Validate UEFI, Secure Boot, and TPM 2.0 inside a Windows Server 2022 VM |
+| [`part-2`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2) | Install AD DS, promote to Domain Controller, and configure DNS |
+| [`part-3`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-3) | Configure BitLocker via GPO, enforce encryption, and store recovery keys in AD |
+| `main` | Overview and table of contents (this document) |
 
 ---
 
@@ -30,23 +32,25 @@ Each part of the lab is contained in its own Git branch to provide a clean, modu
 
 To explore each part of the project:
 
-1. Go to the Code tab
-2. Use the branch dropdown to select the part you want to view
-3. Open the `README.md` in that branch to see full documentation and screenshots
+1. Go to the Code tab.
+2. Use the branch dropdown to select the part you want to view.
+3. Open the `README.md` in that branch to see full documentation and screenshots.
 
 ---
 
 ## Completed Parts
 
-### `part-1-vm-setup`
-Set up the Windows Server 2022 VM with Secure Boot, UEFI, and TPM 2.0 support inside Proxmox. This provides the foundation for BitLocker testing later in the lab.
+### [`part-1`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1)
+Set up the Windows Server 2022 VM with Secure Boot, UEFI, and TPM 2.0 support inside Proxmox. This provides the foundation for BitLocker testing later in the lab.  
+View branch: [part-1](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1)
 
-[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1-vm-setup)
+### [`part-2`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)
+Installed Active Directory Domain Services (AD DS), configured a static IP, and promoted the server to a Domain Controller for `homelab.local`. Also verified DNS Forward Lookup Zones and domain functionality.  
+View branch: [part-2](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)
 
-### `part-2`
-Installed Active Directory Domain Services (AD DS), configured a static IP, and promoted the server to a Domain Controller for `homelab.local`. Also verified DNS Forward Lookup Zones and domain functionality.
-
-[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)
+### [`part-3`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-3)
+Configured Group Policies to enforce BitLocker encryption on operating system drives using TPM. Recovery keys were saved automatically to Active Directory and a mapped SMB share. Verified compliance using PowerShell and Control Panel.  
+View branch: [part-3](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-3)
 
 ---
 
@@ -57,6 +61,7 @@ Installed Active Directory Domain Services (AD DS), configured a static IP, and 
 - PowerShell
 - Group Policy Management Console (GPMC)
 - DNS Manager
+- BitLocker
 - TPM 2.0 emulation (via Proxmox)
 
 ---
@@ -71,18 +76,18 @@ Installed Active Directory Domain Services (AD DS), configured a static IP, and 
 
 ## Author
 
-This project is part of a self-directed homelab series designed to showcase job-ready IT infrastructure skills in identity management, virtualization, and security.  
+This project is part of a self-directed homelab series designed to showcase job-ready IT infrastructure skills in identity management, virtualization, and data protection.  
 All configurations were performed and tested on real VMs in a Proxmox environment.
 
 ---
 
 ## Coming Soon
 
-Additional branches will cover:
+The final part of this project will cover:
 
 - Organizational Units (OUs), domain users, and security groups
-- Group Policy Objects (GPOs) for access control and configuration
-- BitLocker full-disk encryption with TPM and recovery key storage in AD
-- Domain-joined client testing (Windows 10/11)
+- Group Policy Objects (GPOs) targeted to specific OUs
+- PowerShell automation for bulk user creation
+- Optional password complexity and login restriction policies
 
-Each future part will follow the same documentation structure with screenshots and practical configuration examples.
+Each part follows the same documentation structure with screenshots and technical notes.
