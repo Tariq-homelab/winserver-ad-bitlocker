@@ -40,17 +40,17 @@ To explore each part of the project:
 
 ## Completed Parts
 
-### [`part-1`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1)
-Set up the Windows Server 2022 VM with Secure Boot, UEFI, and TPM 2.0 support inside Proxmox. This provides the foundation for BitLocker testing later in the lab.  
-View branch: [part-1](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1)
+### Part 1
+[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-1)  
+Set up the Windows Server 2022 VM with Secure Boot, UEFI, and TPM 2.0 support inside Proxmox. This provides the foundation for BitLocker testing later in the lab.
 
-### [`part-2`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)
-Installed Active Directory Domain Services (AD DS), configured a static IP, and promoted the server to a Domain Controller for `homelab.local`. Also verified DNS Forward Lookup Zones and domain functionality.  
-View branch: [part-2](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)
+### Part 2
+[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-2)  
+Installed Active Directory Domain Services (AD DS), configured a static IP, and promoted the server to a Domain Controller for `homelab.local`. Also verified DNS Forward Lookup Zones and domain functionality.
 
-### [`part-3`](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-3)
-Configured Group Policies to enforce BitLocker encryption on operating system drives using TPM. Recovery keys were saved automatically to Active Directory and a mapped SMB share. Verified compliance using PowerShell and Control Panel.  
-View branch: [part-3](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-3)
+### Part 3
+[View branch](https://github.com/Tariq-homelab/winserver-ad-bitlocker/tree/part-3)  
+Configured Group Policies to enforce BitLocker encryption on operating system drives using TPM. Recovery keys were saved automatically to Active Directory and a mapped SMB share. Verified compliance using PowerShell and Control Panel.
 
 ---
 
